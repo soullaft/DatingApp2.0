@@ -1,7 +1,7 @@
 using API.Data;
 using API.Data.Cache;
+using API.Middlewares;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +17,13 @@ builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 
-app.MapControllers();
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+app.UseRouting();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
 
 app.Run();
